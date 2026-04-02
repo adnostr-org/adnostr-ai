@@ -1,0 +1,78 @@
+[package]
+name = "ai-nostr-ad-core"
+version = "0.1.0"
+edition = "2021"
+description = "AI Nostr广告协议核心库"
+license = "MIT"
+authors = ["AI Nostr Team"]
+repository = "https://github.com/ai-nostr/ad-protocol"
+
+[features]
+default = ["python", "wasm"]
+python = ["pyo3", "numpy"]
+wasm = ["wasm-bindgen"]
+full = ["python", "wasm", "sqlx", "redis", "tokio"]
+
+[dependencies]
+# 核心依赖
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+# 加密和安全
+secp256k1 = { version = "0.27", features = ["rand-std", "global-context"] }
+sha2 = "0.10"
+hmac = "0.12"
+aes = "0.8"
+rand = "0.8"
+
+# 网络和异步
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+tungstenite = "0.20"
+url = "2.4"
+
+# 数据库和存储
+sqlx = { version = "0.7", optional = true, features = ["postgres", "runtime-tokio-native-tls"] }
+redis = { version = "0.23", optional = true }
+sled = "0.34"
+
+# Python绑定
+pyo3 = { version = "0.20", optional = true, features = ["extension-module"] }
+numpy = { version = "0.20", optional = true }
+
+# WebAssembly支持
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+web-sys = { version = "0.3", optional = true, features = ["Window", "Document", "Element"] }
+
+# 零知识证明
+bellman = { version = "0.13", optional = true }
+arkworks = { version = "0.4", optional = true }
+
+[dev-dependencies]
+tempfile = "3.8"
+criterion = "0.5"
+proptest = "1.3"
+
+[[bench]]
+name = "protocol_benchmarks"
+harness = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "ai_nostr_ad_core"
+
+[package.metadata.maturin]
+classifier = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
