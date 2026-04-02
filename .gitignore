@@ -1,7 +1,3 @@
-cd /backup/ai-nostr-ad-protocol
-
-cat > .gitignore << 'EOF'
-# ==================== Python ====================
 __pycache__/
 *.py[codz]
 *$py.class
